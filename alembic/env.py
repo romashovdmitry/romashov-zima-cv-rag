@@ -11,6 +11,7 @@ from core.config import settings
 from core.db import Base  # noqa: F401 – registers models on Base.metadata
 
 # Import all models so Alembic autogenerate can detect them.
+from users.models import User, UserProfile  # noqa: F401
 #import app.chat.models  # noqa: F401
 #import app.stats.models  # noqa: F401
 

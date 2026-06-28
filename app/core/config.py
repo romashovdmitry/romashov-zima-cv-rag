@@ -57,6 +57,12 @@ class Settings(BaseSettings):
     retrieval_top_k: int = 10
     rrf_k: int = 60
 
+    # JWT
+    secret_key: str = "change-me-in-production-use-a-long-random-string"
+    jwt_algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+    refresh_token_expire_days: int = 7
+
     @property
     def database_url(self) -> str:
         """Async SQLAlchemy connection string for PostgreSQL."""

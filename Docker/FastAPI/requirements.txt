@@ -12,3 +12,6 @@ langchain-anthropic
 langchain-community
 python-dotenv
 qdrant_client
+python-jose[cryptography]
+passlib[bcrypt]
+pydantic-settings
