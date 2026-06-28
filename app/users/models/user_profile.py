@@ -28,17 +28,17 @@ class UserProfile(Base):
         unique=True,
         nullable=False,
     )
+    # Whether the user is open to relocation for work
     is_ready_to_relocate: Mapped[bool | None] = mapped_column(
         Boolean,
         nullable=True,
-        default=None,
-        description="Whether the user is open to relocation for work"
+        default=None        
     )
+    # Whether the user can work on a B2B basis
     can_work_b2b: Mapped[bool | None] = mapped_column(
         Boolean,
         nullable=True,
-        default=None,
-        description="Whether the user can work on a B2B basis"
+        default=None 
     )
 
     # realationships
