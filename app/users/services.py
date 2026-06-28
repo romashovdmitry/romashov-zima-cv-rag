@@ -1,12 +1,13 @@
 """User authentication and management services."""
 from __future__ import annotations
 
+import hashlib
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+import bcrypt
 from jose import jwt
-from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.config import settings
@@ -15,19 +16,30 @@ from users.repository import UserRepository
 
 
 class PasswordService:
-    """Bcrypt password hashing and verification."""
+    """Password hashing and verification.
 
-    _context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    Pre-hashes with SHA-256 before bcrypt to remove the 72-byte password limit.
+    """
+
+    @staticmethod
+    def _digest(password: str) -> bytes:
+        return hashlib.sha256(password.encode("utf-8")).digest()
 
     @classmethod
     def hash(cls, password: str) -> str:
         """Return bcrypt hash of *password*."""
-        return cls._context.hash(password)
+        hashed = bcrypt.hashpw(cls._digest(password), bcrypt.gensalt())
+        return hashed.decode("utf-8")
 
     @classmethod
     def verify(cls, plain_password: str, hashed_password: str) -> bool:
         """Verify *plain_password* against the stored *hashed_password*."""
-        return cls._context.verify(plain_password, hashed_password)
+        try:
+            return bcrypt.checkpw(
+                cls._digest(plain_password), hashed_password.encode("utf-8")
+            )
+        except ValueError:
+            return False
 
 
 class JWTService:
