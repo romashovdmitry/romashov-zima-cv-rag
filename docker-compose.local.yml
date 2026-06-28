@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  fast_api_backend:
+    container_name: fast_api_backend
+    build:
+      context: .
+      dockerfile: ./Docker/FastAPI/Dockerfile
+    volumes:
+          - ./app:/app # Mounts local code so changes reflect immediately
+          - ./alembic:/app/alembic # Root-level alembic scripts with env.py
+          - ./main.py:/app/main.py # Root-level FastAPI entrypoint
+    ports:
+      - "8000:8000"
+    environment:
+      - QDRANT_HOST=vector_db
+      - QDRANT_PORT=6334  # Using high-performance gRPC instead of HTTP
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    command: sh -c "alembic -c /app/alembic.ini upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-rags}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+#    depends_on:
+#      - vector_db
+
+#  vector_db:
+#    image: qdrant/qdrant:latest
+#    ports:
+#      - "6333:6333" # REST API (for dashboard)
+#      - "6334:6334" # gRPC API (for fast operations from FastAPI)
+#    volumes:
+#      # CRITICALLY IMPORTANT: persistent storage for vectors
+#      - qdrant_data:/qdrant/storage
+#    environment:
+#      - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY} # Protect the database in production
+
+volumes:
+  postgres_data:

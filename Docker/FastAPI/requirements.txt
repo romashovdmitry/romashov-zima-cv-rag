@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+alembic
+sqlalchemy
+asyncpg
+psycopg2-binary
+langchain
+langchain-core
+langgraph
+langchain-openai
+langchain-anthropic
+langchain-community
+python-dotenv
