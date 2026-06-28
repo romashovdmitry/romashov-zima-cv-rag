@@ -1,18 +1,28 @@
+# base Fast API dependencies
 fastapi
 uvicorn[standard]
+
+# database dependencies
 alembic
 sqlalchemy
 asyncpg
 psycopg2-binary
+
+# langcahin dependencies
 langchain
 langchain-core
 langgraph
 langchain-openai
 langchain-anthropic
 langchain-community
-python-dotenv
+
+# Qdrant vector database dependencies
 qdrant_client
+
+# JWT and password hashing dependencies
 python-jose[cryptography]
 passlib[bcrypt]
 pydantic-settings
+
+# Fast API admin interface dependencies
 sqladmin[full]
