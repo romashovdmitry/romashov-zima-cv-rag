@@ -7,9 +7,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from sqlalchemy import select
 
+from core.admin import create_admin
 from core.config import settings
+from core.initial_data import create_superuser_if_missing
 
 logging.basicConfig(
     level=logging.INFO,
@@ -26,8 +27,7 @@ class HealthResponse(BaseModel):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    """Application lifespan: not it's empty"""
-
+    await create_superuser_if_missing()
     yield
 
 
@@ -40,6 +40,8 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+
+create_admin(app)
 
 app.add_middleware(
     CORSMiddleware,

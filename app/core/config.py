@@ -63,6 +63,10 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     refresh_token_expire_days: int = 7
 
+    # Initial superuser (created automatically on first startup)
+    first_superuser_email: str = "admin@example.com"
+    first_superuser_password: str = "changeme"
+
     @property
     def database_url(self) -> str:
         """Async SQLAlchemy connection string for PostgreSQL."""
