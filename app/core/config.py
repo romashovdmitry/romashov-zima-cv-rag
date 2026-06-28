@@ -29,6 +29,10 @@ class Settings(BaseSettings):
     # Light model: query translation and other low-risk structured tasks
     groq_light_llm_model: str = "llama-3.1-8b-instant"
 
+    # an other AI apy keys
+    claude_code_api_key: str = ""
+    openai_api_key: str = ""
+
     # Ollama (local fallback when GROQ_API_KEY is not set)
     ollama_host: str = "http://ollama:11434"
     llm_model: str = "llama3.2"

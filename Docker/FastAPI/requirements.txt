@@ -11,3 +11,4 @@ langchain-openai
 langchain-anthropic
 langchain-community
 python-dotenv
+qdrant_client
