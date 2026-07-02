@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from sqladmin import Admin
 
 from core.db import engine
+from cv_uploader.admin import CVDocumentAdmin
 from users.admin import UserAdmin, UserProfileAdmin, authentication_backend
 
 
@@ -19,3 +20,4 @@ def create_admin(app: FastAPI) -> None:
     )
     admin.add_view(UserAdmin)
     admin.add_view(UserProfileAdmin)
+    admin.add_view(CVDocumentAdmin)

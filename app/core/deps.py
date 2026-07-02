@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.db import get_db
 from users.models.user import User
 from users.repository import UserRepository
-from users.services import JWTService
+from users.services import decode_token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -27,7 +27,7 @@ async def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = JWTService.decode(token)
+        payload = decode_token(token)
         if payload.get("type") != "access":
             raise credentials_exc
         sub: str | None = payload.get("sub")

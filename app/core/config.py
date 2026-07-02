@@ -20,7 +20,16 @@ class Settings(BaseSettings):
     # Qdrant
     qdrant_host: str = "localhost"
     qdrant_port: int = 6333
+    qdrant_api_key: str = ""
     qdrant_collection: str = "vacancies"
+    qdrant_cv_collection: str = "cv_chunks"
+
+    # CV upload
+    cv_upload_dir: str = "./uploads"
+
+    # Chunking
+    chunk_size: int = 1_000
+    chunk_overlap: int = 200
 
     # Groq cloud inference (takes priority over Ollama when set)
     groq_api_key: str = ""

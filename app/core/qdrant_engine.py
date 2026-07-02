@@ -1,18 +1,18 @@
-from typing import Generator
+from collections.abc import Generator
+
 from qdrant_client import QdrantClient
+
 from core.config import settings
 
-# Инициализируем синглтон клиента. 
-# Используем gRPC (порт 6334) — он в разы быстрее, чем HTTP REST API.
+# Singleton client. gRPC (port 6334) is significantly faster than HTTP REST.
 qdrant_client = QdrantClient(
-    host=settings.QDRANT_HOST,
-    grpc_port=settings.QDRANT_PORT,
+    host=settings.qdrant_host,
+    grpc_port=settings.qdrant_port,
     prefer_grpc=True,
-    api_key=settings.QDRANT_API_KEY
+    api_key=settings.qdrant_api_key or None,
 )
 
-# Зависимость (Dependency) для эндпоинтов
+
 def get_qdrant() -> Generator[QdrantClient, None, None]:
-    # Клиент Qdrant сам управляет пулом соединений, 
-    # поэтому просто отдаем его в контекст запроса
+    """FastAPI dependency — yields the shared Qdrant client."""
     yield qdrant_client

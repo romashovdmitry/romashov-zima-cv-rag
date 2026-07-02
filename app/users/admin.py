@@ -11,7 +11,7 @@ from core.config import settings
 from core.db import AsyncSessionLocal
 from users.models.user import User
 from users.models.user_profile import UserProfile
-from users.services import UserService
+from users.services import authenticate_user
 
 
 class AdminAuthBackend(AuthenticationBackend):
@@ -32,7 +32,7 @@ class AdminAuthBackend(AuthenticationBackend):
         password = str(form.get("password", ""))
 
         async with AsyncSessionLocal() as session:
-            user = await UserService.authenticate(
+            user = await authenticate_user(
                 session, email=email, password=password
             )
 

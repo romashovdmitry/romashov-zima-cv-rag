@@ -3,14 +3,17 @@
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from core.admin import create_admin
 from core.config import settings
 from core.initial_data import create_superuser_if_missing
+from cv_uploader.api import router as cv_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -27,6 +30,7 @@ class HealthResponse(BaseModel):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    Path(settings.cv_upload_dir).mkdir(parents=True, exist_ok=True)
     await create_superuser_if_missing()
     yield
 
@@ -51,7 +55,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(any_router, prefix="/api/v1")
+app.mount("/uploads", StaticFiles(directory=settings.cv_upload_dir), name="uploads")
+
+app.include_router(cv_router, prefix="/cv", tags=["CV Upload"])
 
 
 @app.get(

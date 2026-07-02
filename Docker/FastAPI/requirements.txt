@@ -8,16 +8,24 @@ sqlalchemy
 asyncpg
 psycopg2-binary
 
-# langcahin dependencies
+# langchain dependencies
 langchain
 langchain-core
+langchain-text-splitters
+langchain-community
+langchain-experimental
 langgraph
 langchain-openai
 langchain-anthropic
-langchain-community
 
 # Qdrant vector database dependencies
 qdrant_client
+
+# embeddings
+fastembed
+
+# PDF text extraction
+pypdf
 
 # JWT and password hashing dependencies
 python-jose[cryptography]
